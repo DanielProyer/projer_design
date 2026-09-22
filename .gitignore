@@ -1,0 +1,19 @@
+# Pfad-Overrides duerfen nie ins Repo und nie in die CI (Auflage Heineken,
+# 20.09.2026): Ein Override, der auf einen Arbeitsbaum zeigt, den es auf dem
+# Laeufer nicht gibt, bricht den Build - oder die Kette wird gruen fuer einen
+# Stand, den niemand ausliefert. Versions-Overrides gehoeren dagegen in die
+# pubspec.yaml selbst, nicht in diese Datei.
+pubspec_overrides.yaml
+
+# Dart und Flutter
+.dart_tool/
+build/
+.packages
+*.iml
+.idea/
+.vscode/
+
+# Betriebssystem
+Thumbs.db
+desktop.ini
+.DS_Store

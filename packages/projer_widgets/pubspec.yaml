@@ -1,0 +1,22 @@
+name: projer_widgets
+description: "Feldgehaertete Bausteine fuer alle Apps von Daniel Projer."
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ^3.11.0
+  flutter: ">=3.41.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # Im Repo per Pfad. Apps binden beide Pakete per Git mit gepinntem Ref ein.
+  projer_tokens:
+    path: ../projer_tokens
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:

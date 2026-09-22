@@ -1,0 +1,49 @@
+name: Prüfung
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  waechter:
+    name: Kein Pfad-Override im Repo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Auflage aus der Abstimmung vom 20.09.2026: Ein eingecheckter Pfad-Override
+      # macht die Kette gruen fuer einen Stand, den niemand ausliefert. Bei
+      # Heineken war eine CI acht Laeufe lang rot, ohne dass es auffiel. Deshalb
+      # ein Waechter, der rot wird, statt einer Regel, an die man sich halten muss.
+      - name: pubspec_overrides.yaml darf nicht getrackt sein
+        run: |
+          if git ls-files | grep -q 'pubspec_overrides.yaml'; then
+            echo '::error::pubspec_overrides.yaml ist eingecheckt. Ein Pfad-Override gehoert nie ins Repo.'
+            git ls-files | grep 'pubspec_overrides.yaml'
+            exit 1
+          fi
+          echo 'Kein Pfad-Override im Repo.'
+
+  pakete:
+    name: ${{ matrix.paket }}
+    runs-on: ubuntu-latest
+    needs: waechter
+    strategy:
+      fail-fast: false
+      matrix:
+        paket: [projer_tokens, projer_widgets]
+    defaults:
+      run:
+        working-directory: packages/${{ matrix.paket }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter analyze --fatal-infos
+      # Der Kontrasttest in projer_tokens rechnet jeden Farbwert nach. Faellt
+      # einer unter die Schwelle, ist die Kette rot - nicht als Absichtserklaerung,
+      # sondern als Test.
+      - run: flutter test
