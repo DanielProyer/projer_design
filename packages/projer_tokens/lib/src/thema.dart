@@ -111,14 +111,32 @@ ThemeData projerThema({
     extensions: [farben],
   );
 
+  // 🔴 Die Textfarbe MUSS hier gesetzt werden, und zwar an jedem Eintrag.
+  //
+  // Befund vom 22.09.2026, gefunden im Feld beim ersten Bildschirm der
+  // Haus-App: `Schrift.*` sind absichtlich farblos, damit derselbe Stil in
+  // hellem und dunklem Thema taugt. Setzt man sie ohne Farbe ins
+  // [TextTheme], bleibt `color` null - und die Flutter-Engine malt Text
+  // ohne aufgeloeste Farbe **weiss**. Auf der hellen Grundflaeche war der
+  // ganze Bildschirminhalt damit unsichtbar: weiss auf weiss, ohne Fehler,
+  // ohne Warnung, und der Widget-Test blieb gruen, weil `find.text` die
+  // Farbe nicht prueft.
+  //
+  // Deshalb: jeder Eintrag bekommt seine Farbe aus dem Schema. Der Test
+  // `thema_test.dart` rechnet nach, dass KEIN Eintrag farblos bleibt - die
+  // Regel ist eine Pruefung, keine Gewohnheit.
+  final aufFlaeche = schema.onSurface;
+  final gedaempft = schema.onSurfaceVariant;
+
   return basis.copyWith(
     textTheme: basis.textTheme.copyWith(
-      bodySmall: Schrift.klein,
-      bodyMedium: Schrift.text,
-      bodyLarge: Schrift.textBetont,
-      titleMedium: Schrift.titel,
-      headlineSmall: Schrift.bildschirm,
-      displaySmall: Schrift.gross,
+      // Kleingedrucktes steht gedaempft - es ist Beiwerk, kein Fliesstext.
+      bodySmall: Schrift.klein.copyWith(color: gedaempft),
+      bodyMedium: Schrift.text.copyWith(color: aufFlaeche),
+      bodyLarge: Schrift.textBetont.copyWith(color: aufFlaeche),
+      titleMedium: Schrift.titel.copyWith(color: aufFlaeche),
+      headlineSmall: Schrift.bildschirm.copyWith(color: aufFlaeche),
+      displaySmall: Schrift.gross.copyWith(color: aufFlaeche),
     ),
     // Knöpfe: Höhe aus den Tippflächen, Breite NICHT unendlich.
     // `Size.fromHeight(52)` hiesse `Size(∞, 52)` — der Befund der Finanzapp,

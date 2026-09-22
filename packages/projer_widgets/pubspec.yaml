@@ -1,6 +1,6 @@
 name: projer_widgets
 description: "Feldgehaertete Bausteine fuer alle Apps von Daniel Projer."
-version: 0.1.0
+version: 0.1.1
 publish_to: none
 
 environment:

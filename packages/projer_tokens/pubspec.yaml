@@ -1,6 +1,6 @@
 name: projer_tokens
 description: "Farb-, Abstands- und Schrift-Token fuer alle Apps von Daniel Projer."
-version: 0.1.0
+version: 0.1.1
 publish_to: none
 
 environment:
